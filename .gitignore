@@ -1,2 +1,4 @@
 #Ignore Secrets file
 secrets
+__pycache__
+*.ipynb
