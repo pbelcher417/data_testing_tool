@@ -1,0 +1,26 @@
+tables:
+  - name: "pb-data-tool-testing.test_data.test_sample_1"
+    columns:
+      - name: "system_1_product_price"
+        data_area: "Assets"
+        data_tested: "Line Rental"
+        system: "CRM"
+        field_type: "Value"
+        date_value_checked: "Line Rental Amount"
+        tests:    
+          - business_rule: "Values missing"            
+            type: is_null
+          - business_rule: "Values negative"
+            type: is_negative
+      - name: "system_2_product_price"
+        data_area: "Assets"
+        data_tested: "Line Rental"
+        system: "CRM"
+        field_type: "Value"
+        date_value_checked: "Line Rental Amount"
+        tests:    
+          - business_rule: "Values missing"            
+            type: is_null
+          - business_rule: "Values negative"
+            type: is_negative
+
