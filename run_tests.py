@@ -4,16 +4,20 @@ from google.oauth2 import service_account
 from datetime import date, datetime
 from tests.define_tests import *
 
+#Function to load YML Config File
 def load_config(config_file):
     with open(config_file, 'r') as file:
         return yaml.safe_load(file)    
 
+#Function to run tests based on YML Config
 def run_tests(config):
     test_results = []
 
     for table in config['tables']:
         table_name = table['name']
         for column in table['columns']:
+
+            #Gets data from Config file associated to the column
             column_name = column['name']
             data_area = column['data_area']
             data_tested = column['data_tested']
@@ -21,12 +25,14 @@ def run_tests(config):
             field_type = column['field_type']
             date_value_checked = column['date_value_checked']
             
+            #Loop thorough tests section of Config file
             for test in column['tests']:
-                print(test)
+
+                #Gets details associated to the test
                 business_rule = test['business_rule']  # Get custom test name
                 test_type = test['type']  # Get test type
-                print(test_type)
                 
+                #Checks for test type and runs associated test
                 if test_type == "is_null":
                     output = null_check(table_name, column_name)
                     failure_count = output[0]
@@ -40,6 +46,7 @@ def run_tests(config):
                     target_column = test['target_column']
                     failure_count = equality_check(table_name, column_name, target_column)
                         
+                #Appends the data to a list of dictionaries
                 test_results.append({
                     'data_area': data_area,
                     'data_tested': data_tested,
@@ -57,6 +64,7 @@ def run_tests(config):
 
     return test_results
 
+#Function to load data in JSON format to BigQuery
 def load_to_bq(test_result_table, test_results):
 
     errors = client.insert_rows_json(test_result_table, test_results)
@@ -67,6 +75,7 @@ def load_to_bq(test_result_table, test_results):
     else:
         print(f"Errors while inserting rows: {errors}")
 
+#Run tests
 if __name__ == "__main__":
     #Load Test configuaration file
     config = load_config('test_config.yml')
